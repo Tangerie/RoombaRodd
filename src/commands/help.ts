@@ -26,7 +26,10 @@ export async function execute(interaction : CommandInteraction) {
             *Creates a prompt to add users*
             
             **Remove users** - /removeusers
-            *Creates a prompt to remove users*`)
+            *Creates a prompt to remove users*
+            
+            **List allowed users** - /listusers
+            *Lists the users allowed in your room*`)
             .setFooter("Your dumb")
         ]
     });
