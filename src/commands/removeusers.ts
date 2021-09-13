@@ -43,6 +43,7 @@ export async function execute(interaction : CommandInteraction) {
         if(!toRemove) return;
 
         for(const [id, user] of toRemove) {
+            await user.voice.disconnect();
             await RemoveUserFromChannel(user.user, channel);
         }
         
