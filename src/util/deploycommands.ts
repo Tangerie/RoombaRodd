@@ -36,8 +36,8 @@ export async function RegisterCommandsForAllGuilds(client: Client) {
 
 //Register / Perms for a guild
 export async function RegisterCommandsForGuild(guild : Guild) {
-        console.log(`[${guild.name}] Registering Commands`)
-        const res = await RegisterRawCommandsForGuild(guild.client, guild.id);
+        console.log(`[${guild.name}] Registering Commands`);
+        const res = await RegisterRawCommandsForGuild(guild);
         
         //Fix Permission
         console.log(`[${guild.name}] Applying Permissions`);
@@ -94,12 +94,14 @@ async function CalculateAdminPermissions(guild : Guild, appCommands : Applicatio
 }
 
 //Send the instructions to register commands
-async function RegisterRawCommandsForGuild(client : Client, guildId : string) : Promise<ApplicationCommand[]> {
+async function RegisterRawCommandsForGuild(guild : Guild) : Promise<ApplicationCommand[]> {
+    const client = guild.client;
+
     const rest = new REST({version: '9'}).setToken(process.env.DISCORD_TOKEN as string);
 
     const cmds = [...commands.values()];
 
-    const res = await rest.put(Routes.applicationGuildCommands(client.user?.id || "", guildId), { body: cmds.map(x => {
+    const body = cmds.map(x => {
         const cmd = x.data.toJSON();
 
         if(x.admin) {
@@ -108,6 +110,8 @@ async function RegisterRawCommandsForGuild(client : Client, guildId : string) : 
         }
 
         return cmd;
-    })}).catch(x => console.error(`Failed to set commands`));
+    });
+
+    const res = await rest.put(Routes.applicationGuildCommands(client.user?.id || "", guild.id), { body: body }).catch(x => console.error(`Failed to set commands`));
     return res as ApplicationCommand[];
 }

@@ -1,5 +1,5 @@
-import { Client, CommandInteraction, Interaction } from "discord.js";
-import { GetCommands, RegisterCommandsForAllGuilds } from "../../util/deploycommands";
+import { CommandInteraction, Interaction } from "discord.js";
+import { GetCommands } from "../../util/deploycommands";
 
 export const name = 'interactionCreate';
 export const once = false;
@@ -8,7 +8,7 @@ export async function execute(interaction : Interaction) {
         const cmdInter = interaction as CommandInteraction;
 
         const cmd = GetCommands().get(interaction.commandName);
-
+        
         if(!cmd) return;
 
         try {

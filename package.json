@@ -14,8 +14,9 @@
     "hypixel-api-reborn": "^8.3.0"
   },
   "scripts": {
-    "start": "tsc && node build/index.js",
-    "build": "tsc"
+    "start": "npm run clean && tsc && node build/index.js",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf build/*"
   },
   "author": "Tangerie",
   "license": "ISC",

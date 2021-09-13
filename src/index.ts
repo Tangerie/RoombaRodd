@@ -1,9 +1,8 @@
 import dotenv from 'dotenv';
 import fs from "fs";
 
-import { Client, CommandInteraction, Intents, Interaction } from 'discord.js';
-import { RegisterCommandsForAllGuilds, RegisterCommandsForGuild, UpdatePermissionsForGuild } from './util/deploycommands';
-import Command from './models/command';
+import { Client, Intents } from 'discord.js';
+import { RegisterCommandsForGuild, UpdatePermissionsForGuild } from './util/deploycommands';
 import DiscordEvent from './models/discordevent';
 
 //Load .env file
@@ -16,7 +15,11 @@ if(process.env.DISCORD_TOKEN == undefined || process.env.DISCORD_TOKEN == "") {
 }
 //#endregion
 
-const client = new Client({intents: [Intents.FLAGS.GUILDS] });
+if(!fs.existsSync("./data/")) {
+    fs.mkdirSync("./data/");
+}
+
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 //Ensure commands are always updated and such
 client.on("roleUpdate", x => {UpdatePermissionsForGuild(x.guild)});
