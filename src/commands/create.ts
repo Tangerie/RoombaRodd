@@ -46,7 +46,7 @@ export async function execute(interaction : CommandInteraction) {
 
         interaction.followUp({
             ephemeral: true,
-            content: `Created ${channel.name} with ${msg.mentions.members?.filter(x => x.id != msg.author.id).map(x => x.toString()).join(" ")}`
+            content: `Created ${channel.toString()} with ${msg.mentions.members?.filter(x => x.id != msg.author.id).map(x => x.toString()).join(" ")}`
         });
 
         msg.delete();

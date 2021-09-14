@@ -32,9 +32,7 @@ export async function execute(interaction : CommandInteraction) {
     for(const id of [room.owner, ...room.users]) {
         const user = await channel.guild.members.fetch(id);
 
-        console.log(user.voice.channelId, channel.id);
-
-        lines.push(`${user.displayName}`);
+        lines.push(`${user.displayName} - *${user.user.username}#${user.user.discriminator}*`);
     }
 
     interaction.reply({
