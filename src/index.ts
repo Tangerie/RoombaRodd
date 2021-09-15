@@ -19,7 +19,7 @@ if(!fs.existsSync("./data/")) {
     fs.mkdirSync("./data/");
 }
 
-const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
 
 //Ensure commands are always updated and such
 client.on("roleUpdate", x => {UpdatePermissionsForGuild(x.guild)});

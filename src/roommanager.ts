@@ -1,5 +1,6 @@
-import { Guild, User, Permissions, OverwriteResolvable, UserFlags, VoiceChannel, Channel } from 'discord.js';
+import { Guild, User, Permissions, OverwriteResolvable, UserFlags, VoiceChannel, Channel, CategoryChannel } from 'discord.js';
 import fs from 'fs';
+import { GuildSettings } from './models/guildsettings';
 import Room from './models/room';
 import { LoadMapFromJson, SaveMapToJson } from './util/json';
 
@@ -7,7 +8,11 @@ const dataFile = "rooms.json";
 
 const roomMap = LoadMapFromJson<string, Room>(`./data/${dataFile}`);
 
+const guildSettingsMap = LoadMapFromJson<string, GuildSettings>(`./data/guilds.json`);
+
 export async function CreateRoom(name : string, guild : Guild, owner : User, others : User[]) : Promise<Room> {
+    const settings = GetSettingsForGuild(guild.id);
+
     const chan = await guild?.channels.create(name, {
         type: "GUILD_VOICE",
         permissionOverwrites: [
@@ -25,7 +30,8 @@ export async function CreateRoom(name : string, guild : Guild, owner : User, oth
                     allow: [Permissions.FLAGS.VIEW_CHANNEL]
                 } as OverwriteResolvable;
             })
-        ]
+        ],
+        parent: guild.channels.cache.get(settings.parentCategory) as CategoryChannel
     });
 
     const room : Room = {
@@ -88,4 +94,22 @@ export function GetRoomsByOwner(owner : User) {
 
 function SaveRooms() {
     SaveMapToJson(`./data/${dataFile}`, roomMap);
+}
+
+export function GetSettingsForGuild(id : string) {
+    const settings = guildSettingsMap.get(id);
+    if(settings) return settings;
+    return {
+        closeRoomWhenEmpty: true,
+        parentCategory: ""
+    } as GuildSettings;
+}
+
+export function SetGuildSettings(id : string, settings : GuildSettings) {
+    guildSettingsMap.set(id, settings);
+    SaveGuildSettings();
+}
+
+function SaveGuildSettings() {
+    SaveMapToJson(`./data/guilds.json`, guildSettingsMap);
 }

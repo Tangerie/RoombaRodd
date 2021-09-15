@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Guild, Interaction, MessageEmbed, OverwriteResolvable, Permissions, VoiceChannel } from "discord.js";
-import { CreateRoom, GetRoomsByOwner } from "../roommanager";
+import { CreateRoom, GetRoomsByOwner, GetSettingsForGuild } from "../roommanager";
 
 export const data = new SlashCommandBuilder()
     .setName("create")
@@ -10,6 +10,8 @@ export const data = new SlashCommandBuilder()
 export const admin = false;
 
 export async function execute(interaction : CommandInteraction) {
+    if(!interaction.guild) return;
+
     if(GetRoomsByOwner(interaction.user).length > 0) {
         interaction.reply({
             embeds: [
